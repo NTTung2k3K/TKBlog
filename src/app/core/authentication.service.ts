@@ -4,21 +4,27 @@ import { UrlConstant } from '../common/url.constants';
 import { CommonVariable } from '../common/common.variable';
 import { Router } from '@angular/router';
 import { User } from '../domains/user';
+import { SystemConstant } from '../common/system.constants';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor(private _httpClient: HttpClient, private _router: Router) { }
+  constructor(private _httpClient: HttpClient, private _router: Router, private _notifiService: NotificationService) { }
 
   login(username: string, password: string) {
     var data = {
       userName: username,
       password: password
     }
-    this._httpClient.post(UrlConstant.BASE_URL + "/api/Staffs/LoginStaffWithResponse", data).subscribe(response => {
-      console.log(response);
+    this._httpClient.post<any>(UrlConstant.BASE_URL + "/api/Staffs/LoginStaffWithResponse", data).subscribe(response => {
+      const user = new User(response.resultObj.staffId, response.resultObj.fullName, response.resultObj.email, response.resultObj.image, response.resultObj.access_Token);
+      localStorage.setItem(CommonVariable.USER, JSON.stringify(user))
+      this._router.navigate([UrlConstant.MAIN_ADMIN])
+    }, error => {
+      this._notifiService.showError("Error Credential", "Username or password is invalid!");
     })
   }
 

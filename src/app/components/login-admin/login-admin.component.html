@@ -7,13 +7,19 @@
                 </a>
             </div>
 
-            <form class="login100-form validate-form">
-                <span class="login100-form-title"> Đăng nhập </span>
+            <form class="login100-form validate-form" [formGroup]="LoginForm" (submit)="onLogin()">
+                <span class="login100-form-title"> TKBlog System </span>
 
                 <!-- Login gg fb -->
 
                 <div class="wrap-input100 validate-input" data-validate="Yêu cầu tài khoản">
-                    <input class="input100" type="text" name="Username" placeholder="Tài khoản" />
+                    <input class="input100" type="text" name="Username" formControlName="username"
+                        autocomplete="username" placeholder="Username" />
+                    <small class="text-center"
+                        *ngIf="LoginForm.get('username')?.invalid && (LoginForm.get('username')?.dirty || LoginForm.get('username')?.touched)">
+                        <span *ngIf="LoginForm.get('username')?.errors?.['required']">Username is required</span>
+
+                    </small>
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
                         <i class="fa fa-user-circle-o" aria-hidden="true"></i>
@@ -21,14 +27,22 @@
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Yêu cầu mật khẩu">
-                    <input class="input100" type="password" name="pass" placeholder="Mật khẩu" />
+                    <input class="input100" type="password" formControlName="password" name="pass"
+                        autocomplete="password" placeholder="Password" />
+
+                    <small
+                        *ngIf="LoginForm.get('password')?.invalid && (LoginForm.get('password')?.dirty || LoginForm.get('password')?.touched)">
+                        <span *ngIf="LoginForm.get('password')?.errors?.['required']">Password is required</span>
+                    </small>
+
+
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
                         <i class="fa fa-lock" aria-hidden="true"></i>
                     </span>
                 </div>
                 <div class="container-login100-form-btn">
-                    <button class="login100-form-btn">Đăng nhập</button>
+                    <button class="login100-form-btn" [disabled]="!LoginForm.valid">Đăng nhập</button>
                 </div>
                 <div class="text-center">
                     <a class="txt2" href="forgetpassword.html">Quên mật khẩu </a>
