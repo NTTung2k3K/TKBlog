@@ -3,6 +3,18 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
+small {
+    color: red;
+    font-weight: bold;
+}
+
+.login100-form-btn:disabled {
+    background-color: gray;
+}
+
+.login100-form-btn:disabled:hover {
+    cursor: default;
+}
 
 * {
     margin: 0px;

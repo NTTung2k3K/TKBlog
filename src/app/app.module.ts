@@ -7,10 +7,13 @@ import { LoginAdminComponent } from './components/login-admin/login-admin.compon
 import { AuthenticationService } from './core/authentication.service';
 import { DataService } from './core/data.service';
 import { NotificationService } from './core/notification.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainAdminComponent } from './components/main-admin/main-admin.component';
 import { MainAdminModule } from './components/main-admin/main-admin.module';
+import { LoginAdminModule } from './components/login-admin/login-admin.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,7 @@ import { MainAdminModule } from './components/main-admin/main-admin.module';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule, BrowserAnimationsModule, MainAdminModule
+    AppRoutingModule, BrowserAnimationsModule, MainAdminModule, LoginAdminModule, ReactiveFormsModule, HttpClientModule, ToastrModule.forRoot()
   ],
   providers: [AuthenticationService, DataService, NotificationService, ToastrService],
   bootstrap: [AppComponent]
