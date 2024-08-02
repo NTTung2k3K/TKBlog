@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MainAdminComponent } from './main-admin.component';
 import { NewsComponent } from './news/news.component';
 import { AppRoutingModule } from '../../app-routing.module';
+import { AuthenticationService } from '../../core/authentication.service';
 
 
 
@@ -13,6 +14,7 @@ import { AppRoutingModule } from '../../app-routing.module';
   ],
   imports: [
     CommonModule, AppRoutingModule
-  ]
+  ],
+  providers: [AuthenticationService]
 })
 export class MainAdminModule { }
