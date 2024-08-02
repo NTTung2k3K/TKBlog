@@ -29,6 +29,7 @@ export class AuthenticationService {
   }
 
   logout() {
+
     localStorage.removeItem(CommonVariable.USER);
     this._router.navigate([UrlConstant.LOGIN])
   }
