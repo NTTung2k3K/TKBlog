@@ -34,6 +34,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce/",
+                "output": "/tinymce/"
               }
             ],
             "styles": [
@@ -45,7 +50,8 @@
             ],
             "scripts": [
                 "node_modules/jquery/dist/jquery.min.js",
-                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+                "node_modules/tinymce/tinymce.min.js"
             ]
           },
           "configurations": {

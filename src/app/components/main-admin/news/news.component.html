@@ -18,7 +18,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-sm-12 col-lg-7">
-            <button type="button" class="btn  btn-success">Create</button>
+            <button type="button" class="btn  btn-success" (click)="showModal()">Create</button>
         </div>
         <div class="col-md-4 col-sm-12 col-lg-5">
             <div class="form-group">
@@ -75,8 +75,48 @@
 
 </section>
 <!-- /.content -->
+
+<!-- Pagination -->
 <div class="text-center">
     <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="totalNews" [nzPageSize]="pageSize"
         (nzPageIndexChange)="onPageIndexChange($event)"></nz-pagination>
 
 </div>
+<!--End pagination-->
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Create/Update News" (nzOnCancel)="handleCancel()"
+    (nzOnOk)="onCreateUpdate()" nzCancelText="Cancel" nzOkText="Save" nzWidth="930px">
+    <ng-container *nzModalContent>
+        <form action="" method="POST" role="form" [formGroup]="createUpdateForm">
+            <input type="hidden">
+            <div class="form-group">
+                <label for="">Name</label>
+                <input type="text" class="form-control" formControlName="NewName" id="" placeholder="News Name">
+            </div>
+            <div class="form-group">
+                <label for="">Title</label>
+                <input type="text" class="form-control" formControlName="Title" id="" placeholder="Title Name">
+            </div>
+            <div class="form-group">
+                <label for="" class="mr-2">Image</label>
+                <input type="file" formControlName="Image">
+            </div>
+            <div class="form-group">
+                <label for="">Description</label>
+                <editor [init]="config" formControlName="Description" apiKey="AIzaSyC_RxELMUreCwKXPnVRUVnrhszIqQvGMjo">
+                </editor>
+            </div>
+            <div class="form-group">
+                <label for="" class="mr-2">Display</label>
+                <nz-switch formControlName="Status"></nz-switch>
+            </div>
+
+
+
+        </form>
+
+    </ng-container>
+</nz-modal>
+
+<!-- End Modal -->
