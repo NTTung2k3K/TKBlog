@@ -15,12 +15,63 @@
     </div><!-- /.container-fluid -->
 </div>
 <!-- /.content-header -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-sm-12 col-lg-7">
+            <button type="button" class="btn  btn-success">Create</button>
+        </div>
+        <div class="col-md-4 col-sm-12 col-lg-5">
+            <div class="form-group">
+                <div class="row">
 
+                    <div class="col-sm-10">
+                        <input type="search" name="" id="input" class="form-control" value="" required="required"
+                            title="">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-info">Search</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <!-- Main content -->
-<section class="content">
+<section class="content m-2">
 
-    <div class="container-fluid">
-        <h1>Hello</h1>
+    <div class="container">
+
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Image</th>
+                    <th>Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="newsData.length > 0">
+                    <tr *ngFor="let item of newsData; let index = index">
+                        <td>{{(pageIndex - 1) * pageSize + index + 1}}</td>
+                        <td>{{item.newName}}</td>
+                        <td style="max-width: 100px;">{{item.title}}</td>
+                        <td><img style="height: 100px; width: 100px;" src="{{item.image}}" alt=""></td>
+                        <td>
+                            <button type="button" class="btn btn-warning m-2">Edit</button>
+                            <button type="button" class="btn btn-info m-2">Detail</button>
+                            <button type="button" class="btn btn-danger m-2">Delete</button>
+                        </td>
+                    </tr>
+                </ng-container>
+                <ng-container *ngIf="newsData.length == 0">
+                    <h1>No data</h1>
+                </ng-container>
+            </tbody>
+        </table>
+
     </div>
 
 </section>
