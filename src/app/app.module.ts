@@ -14,15 +14,18 @@ import { MainAdminModule } from './components/main-admin/main-admin.module';
 import { LoginAdminModule } from './components/login-admin/login-admin.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NewsModule } from './components/main-admin/news/news.module';
+import { NewsComponent } from './components/main-admin/news/news.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginAdminComponent,
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule, BrowserAnimationsModule, MainAdminModule, LoginAdminModule, ReactiveFormsModule, HttpClientModule, ToastrModule.forRoot()
+    BrowserModule, NewsModule,
+    AppRoutingModule, BrowserAnimationsModule, MainAdminModule, LoginAdminModule, ReactiveFormsModule, HttpClientModule, ToastrModule.forRoot(),
+
   ],
   providers: [AuthenticationService, DataService, NotificationService, ToastrService],
   bootstrap: [AppComponent]

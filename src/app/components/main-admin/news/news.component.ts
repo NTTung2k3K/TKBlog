@@ -15,18 +15,25 @@ export class NewsComponent implements OnInit {
   keyword: string = "";
   newsData: any = [];
 
+
   constructor(private _dataService: DataService) { }
 
 
   ngOnInit(): void {
     this.LoadData()
   }
-  private LoadData() {
+  public LoadData() {
     this._dataService.get(`/api/News/View?Keyword=${this.keyword}&pageIndex=${this.pageIndex}`).subscribe(response => {
+      console.log(response);
       this.newsData = response.resultObj.items;
       this.pageIndex = response.resultObj.pageIndex;
       this.pageSize = response.resultObj.pageSize;
       this.totalNews = response.resultObj.totalRecords;
     })
   }
+  onPageIndexChange(pageIndex: number) {
+    this.pageIndex = pageIndex;
+    this.LoadData();
+  }
+
 }

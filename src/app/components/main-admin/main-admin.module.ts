@@ -10,7 +10,6 @@ import { AuthenticationService } from '../../core/authentication.service';
 @NgModule({
   declarations: [
     MainAdminComponent,
-    NewsComponent
   ],
   imports: [
     CommonModule, AppRoutingModule

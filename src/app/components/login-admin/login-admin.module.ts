@@ -7,7 +7,7 @@ import { AuthenticationService } from '../../core/authentication.service';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [LoginAdminComponent],
   imports: [
     CommonModule, ReactiveFormsModule
   ],
