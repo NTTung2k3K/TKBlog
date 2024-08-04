@@ -27,6 +27,20 @@ export class DataService {
     })
   }
 
+  private getHeaderFormImage(): HttpHeaders {
+    var dataUser = localStorage.getItem(CommonVariable.USER);
+
+    if (dataUser == null) {
+      this._router.navigate([UrlConstant.LOGIN])
+      throw new Error("User not authenticated");
+    }
+    var user = JSON.parse(dataUser) as User
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${user.access_Token}`
+    })
+  }
+
   get<T>(url: string): Observable<any> {
     const header = this.getHeader();
     return this._httpClient.get<T>(UrlConstant.BASE_URL + url, { headers: header })
@@ -35,13 +49,20 @@ export class DataService {
     const headers = this.getHeader();
     return this._httpClient.post<T>(UrlConstant.BASE_URL + url, data, { headers });
   }
+  postWithImage<T>(url: string, data: any): Observable<T> {
+    const headers = this.getHeaderFormImage();
+    return this._httpClient.post<T>(UrlConstant.BASE_URL + url, data, { headers });
+  }
 
   // PUT method
   put<T>(url: string, data: any): Observable<T> {
     const headers = this.getHeader();
     return this._httpClient.put<T>(UrlConstant.BASE_URL + url, data, { headers });
   }
-
+  putWithImage<T>(url: string, data: any): Observable<T> {
+    const headers = this.getHeaderFormImage();
+    return this._httpClient.put<T>(UrlConstant.BASE_URL + url, data, { headers });
+  }
   // PATCH method
   patch<T>(url: string, data: any): Observable<T> {
     const headers = this.getHeader();
@@ -54,22 +75,5 @@ export class DataService {
     return this._httpClient.delete<T>(UrlConstant.BASE_URL + url + "/?" + key + "=" + id, { headers });
   }
 
-  // POST method with image
-  postImage<T>(url: string, image: File, additionalData?: any): Observable<T> {
-    const formData: FormData = new FormData();
-    formData.append('image', image, image.name);
-
-    if (additionalData) {
-      for (const key in additionalData) {
-        if (additionalData.hasOwnProperty(key)) {
-          formData.append(key, additionalData[key]);
-        }
-      }
-    }
-
-    const headers = this.getHeader();
-
-    return this._httpClient.post<T>(UrlConstant.BASE_URL + url, formData, { headers });
-  }
 
 }

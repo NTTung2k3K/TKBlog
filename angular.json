@@ -34,17 +34,24 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce/",
+                "output": "/tinymce/"
               }
             ],
             "styles": [
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css",
                "node_modules/bootstrap/dist/css/bootstrap.min.css",
-               "node_modules/font-awesome/css/font-awesome.min.css"
+               "node_modules/font-awesome/css/font-awesome.min.css",
+                "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
             ],
             "scripts": [
                 "node_modules/jquery/dist/jquery.min.js",
-                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+                "node_modules/tinymce/tinymce.min.js"
             ]
           },
           "configurations": {
