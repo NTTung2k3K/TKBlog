@@ -59,7 +59,8 @@
                         <td style="max-width: 100px;">{{item.title}}</td>
                         <td><img style="height: 100px; width: 100px;" src="{{item.image}}" alt=""></td>
                         <td>
-                            <button type="button" class="btn btn-warning m-2">Edit</button>
+                            <button type="button" class="btn btn-warning m-2"
+                                (click)="onEditDetail(item.newsId)">Edit</button>
                             <button type="button" class="btn btn-info m-2">Detail</button>
                             <button type="button" class="btn btn-danger m-2">Delete</button>
                         </td>
@@ -86,10 +87,11 @@
 
 <!-- Modal -->
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Create/Update News" (nzOnCancel)="handleCancel()"
-    (nzOnOk)="onCreateUpdate()" nzCancelText="Cancel" nzOkText="Save" nzWidth="930px">
+    (nzOnOk)="onCreateUpdate()" nzCancelText="Cancel" nzOkText="Save" nzWidth="930px"
+    [nzOkDisabled]="createUpdateForm.invalid">
     <ng-container *nzModalContent>
         <form action="" method="POST" role="form" [formGroup]="createUpdateForm">
-            <input type="hidden">
+            <input type="hidden" formControlName="NewsId">
             <div class="form-group">
                 <label for="">Name</label>
                 <input type="text" class="form-control" formControlName="NewName" id="" placeholder="News Name">
@@ -98,9 +100,14 @@
                 <label for="">Title</label>
                 <input type="text" class="form-control" formControlName="Title" id="" placeholder="Title Name">
             </div>
+            <div class="form-group" *ngIf="createUpdateForm.value.Image">
+                <label for="" class="mr-2">Existing Image</label>
+                <img style="width: 100px; height: 100px;" [src]="createUpdateForm.value.Image" alt="">
+            </div>
+
             <div class="form-group">
                 <label for="" class="mr-2">Image</label>
-                <input type="file" formControlName="Image">
+                <input type="file" (change)="onFileChange($event)">
             </div>
             <div class="form-group">
                 <label for="">Description</label>

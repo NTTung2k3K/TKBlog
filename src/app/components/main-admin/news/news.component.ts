@@ -7,6 +7,9 @@ import { NotificationService } from '../../../core/notification.service';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { finalize, last } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AuthenticationService } from '../../../core/authentication.service';
+import { SystemConstant } from '../../../common/system.constants';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'app-news',
@@ -20,13 +23,7 @@ export class NewsComponent implements OnInit {
   totalNews: number = -1;
   keyword: string = "";
   newsData: any = [];
-  createUpdateForm: FormGroup = new FormGroup({
-    NewName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(70)]),
-    Title: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(70)]),
-    Image: new FormControl(null, [Validators.required]),
-    Description: new FormControl(''),
-    Status: new FormControl('', [Validators.required]),
-  });
+
   source: string = '';
   title = 'images-tinymce';
   config: EditorComponent['init'] = {
@@ -65,7 +62,7 @@ export class NewsComponent implements OnInit {
 
 
 
-  constructor(private _dataService: DataService, private _notificationService: NotificationService, private storage: AngularFireStorage) { }
+  constructor(private _authenService: AuthenticationService, private _dataService: DataService, private _notificationService: NotificationService, private storage: AngularFireStorage) { }
 
 
   ngOnInit(): void {
@@ -105,10 +102,81 @@ export class NewsComponent implements OnInit {
   handleCancel(): void {
     this.isVisible = false;
   }
-  onCreateUpdate() {
-    this.isVisible = false;
-
-
+  createUpdateForm: FormGroup = new FormGroup({
+    NewsId: new FormControl(),
+    NewName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(70)]),
+    Title: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(70)]),
+    Image: new FormControl(null, [Validators.required]),
+    Description: new FormControl(''),
+    Status: new FormControl(''),
+  });
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.createUpdateForm.patchValue({
+        Image: file
+      })
+    }
   }
+  onCreateUpdate() {
+    if (!this.createUpdateForm.valid) return;
 
+
+    const formData = new FormData();
+    formData.append('NewName', this.createUpdateForm.value.NewName);
+    formData.append('Title', this.createUpdateForm.value.Title);
+    formData.append('Image', this.createUpdateForm.get('Image')?.value);
+    formData.append('Description', this.createUpdateForm.value.Description);
+    formData.append('Status', this.createUpdateForm.value.Status);
+    formData.append('WriterId', this._authenService.getUser().staffId);
+
+    if (this.createUpdateForm.value.NewsId == null) {
+      this._dataService.postWithImage('/api/News/Create', formData)
+        .subscribe((response: any) => {
+          if (response.isSuccessed) {
+            this.LoadData();
+            this.createUpdateForm.reset();
+            this._notificationService.showSuccess("Success", SystemConstant.CREATE_SUCCESSFUL);
+          } else {
+            this._notificationService.showWarning("Warning", response.message)
+          }
+        }, error => {
+          this._notificationService.showError("Error", error.message)
+        })
+    } else {
+      formData.append("NewsId", this.createUpdateForm.value.NewsId);
+      this._dataService.putWithImage('/api/News/Update', formData)
+        .subscribe((response: any) => {
+          if (response.isSuccessed) {
+            this.LoadData();
+            this.createUpdateForm.reset();
+            this._notificationService.showSuccess("Success", SystemConstant.CREATE_SUCCESSFUL);
+          } else {
+            this._notificationService.showWarning("Warning", response.message)
+          }
+        }, error => {
+          this._notificationService.showError("Error", error.message)
+        })
+    }
+
+
+
+    this.isVisible = false;
+  }
+  onEditDetail(NewsId: any) {
+    this._dataService.get('/api/News/GetById?NewsId=' + NewsId).subscribe((response: any) => {
+      console.log(response);
+      this.createUpdateForm.setValue({
+        NewsId: response.resultObj.newsId,
+        NewName: response.resultObj.newName,
+        Title: response.resultObj.title,
+        Image: response.resultObj.image,
+        Description: response.resultObj.description,
+        Status: response.resultObj.status,
+      })
+      this.showModal();
+    }, error => {
+      this._notificationService.showError("Error", error.message)
+    })
+  }
 }
