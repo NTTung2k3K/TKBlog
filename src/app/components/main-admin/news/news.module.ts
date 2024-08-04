@@ -12,6 +12,8 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { FirebaseEnvirontment } from '../../../common/firebase.environment';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 
@@ -20,7 +22,7 @@ import { FirebaseEnvirontment } from '../../../common/firebase.environment';
   imports: [
     CommonModule, NzPaginationModule, RouterModule, FormsModule, NzModalModule, ReactiveFormsModule, NzSwitchModule
     , NzUploadModule, EditorModule, AngularFireModule.initializeApp(FirebaseEnvirontment.environment.firebase),
-    AngularFireStorageModule,
+    AngularFireStorageModule, NzPopconfirmModule, NzSpinModule
   ],
   providers: [DataService, { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }],
 })

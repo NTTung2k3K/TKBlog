@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { DataService } from '../../../core/data.service';
 import { CommonVariable } from '../../../common/common.variable';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -17,12 +17,15 @@ import { log } from 'ng-zorro-antd/core/logger';
   styleUrl: './news.component.css'
 })
 export class NewsComponent implements OnInit {
-
+  // Handle Create/Update
+  isVisible = false;
+  isViewMode: boolean = false;
   pageIndex: number = 1;
   pageSize: number = -1;
   totalNews: number = -1;
   keyword: string = "";
   newsData: any = [];
+  isLoading: boolean = false;
 
   source: string = '';
   title = 'images-tinymce';
@@ -65,6 +68,7 @@ export class NewsComponent implements OnInit {
   constructor(private _authenService: AuthenticationService, private _dataService: DataService, private _notificationService: NotificationService, private storage: AngularFireStorage) { }
 
 
+
   ngOnInit(): void {
     this.LoadData()
   }
@@ -81,8 +85,7 @@ export class NewsComponent implements OnInit {
     this.LoadData();
   }
 
-  // Handle Create/Update
-  isVisible = false;
+
 
 
   showModal(): void {
@@ -119,8 +122,12 @@ export class NewsComponent implements OnInit {
     }
   }
   onCreateUpdate() {
-    if (!this.createUpdateForm.valid) return;
+    this.isLoading = true;
 
+    if (!this.createUpdateForm.valid) {
+      this.isLoading = false;
+      return;
+    }
 
     const formData = new FormData();
     formData.append('NewName', this.createUpdateForm.value.NewName);
@@ -130,36 +137,32 @@ export class NewsComponent implements OnInit {
     formData.append('Status', this.createUpdateForm.value.Status);
     formData.append('WriterId', this._authenService.getUser().staffId);
 
+    let request$;
     if (this.createUpdateForm.value.NewsId == null) {
-      this._dataService.postWithImage('/api/News/Create', formData)
-        .subscribe((response: any) => {
-          if (response.isSuccessed) {
-            this.LoadData();
-            this.createUpdateForm.reset();
-            this._notificationService.showSuccess("Success", SystemConstant.CREATE_SUCCESSFUL);
-          } else {
-            this._notificationService.showWarning("Warning", response.message)
-          }
-        }, error => {
-          this._notificationService.showError("Error", error.message)
-        })
+      request$ = this._dataService.postWithImage('/api/News/Create', formData);
     } else {
-      formData.append("NewsId", this.createUpdateForm.value.NewsId);
-      this._dataService.putWithImage('/api/News/Update', formData)
-        .subscribe((response: any) => {
-          if (response.isSuccessed) {
-            this.LoadData();
-            this.createUpdateForm.reset();
-            this._notificationService.showSuccess("Success", SystemConstant.CREATE_SUCCESSFUL);
-          } else {
-            this._notificationService.showWarning("Warning", response.message)
-          }
-        }, error => {
-          this._notificationService.showError("Error", error.message)
-        })
+      formData.append('NewsId', this.createUpdateForm.value.NewsId);
+      request$ = this._dataService.putWithImage('/api/News/Update', formData);
     }
 
-
+    request$.subscribe((response: any) => {
+      this.isLoading = false;
+      if (response.isSuccessed) {
+        this.LoadData();
+        this._notificationService.showSuccess(
+          'Success',
+          this.createUpdateForm.value.NewsId == null
+            ? SystemConstant.CREATE_SUCCESSFUL
+            : SystemConstant.UPDATE_SUCCESSFUL
+        );
+        this.createUpdateForm.reset();
+      } else {
+        this._notificationService.showWarning('Warning', response.message);
+      }
+    }, error => {
+      this.isLoading = false; // Stop loading spinner on error
+      this._notificationService.showError('Error', error.message);
+    });
 
     this.isVisible = false;
   }
@@ -174,9 +177,43 @@ export class NewsComponent implements OnInit {
         Description: response.resultObj.description,
         Status: response.resultObj.status,
       })
+      this.isViewMode = false;
       this.showModal();
     }, error => {
       this._notificationService.showError("Error", error.message)
     })
   }
+  onDetail(NewsId: any) {
+    this._dataService.get('/api/News/GetById?NewsId=' + NewsId).subscribe((response: any) => {
+      this.createUpdateForm.setValue({
+        NewsId: response.resultObj.newsId,
+        NewName: response.resultObj.newName,
+        Title: response.resultObj.title,
+        Image: response.resultObj.image,
+        Description: response.resultObj.description,
+        Status: response.resultObj.status,
+      })
+      this.isViewMode = true;
+      this.showModal();
+    }, error => {
+      this._notificationService.showError("Error", error.message)
+    })
+  }
+  onDelete(NewsId: any) {
+    this.isLoading = true;
+    this._dataService.delete('/api/News/Delete', "NewsId", NewsId)
+      .subscribe((response: any) => {
+        if (response.isSuccessed) {
+          this.LoadData();
+          this._notificationService.showSuccess("Success", SystemConstant.DELETE_SUCCESSFUL);
+        } else {
+          this._notificationService.showWarning("Warning", response.message)
+        }
+      }, error => {
+        this._notificationService.showError("Error", error.message)
+      })
+    this.isLoading = false;
+  }
+
 }
+

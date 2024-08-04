@@ -25,7 +25,8 @@
                 <div class="row">
 
                     <div class="col-sm-10">
-                        <input type="search" id="input" class="form-control" [(ngModel)]="keyword" title="">
+                        <input type="search" id="input" class="form-control" (keyup.enter)="LoadData()"
+                            [(ngModel)]="keyword" title="">
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-info" (click)="LoadData()">Search</button>
@@ -61,8 +62,12 @@
                         <td>
                             <button type="button" class="btn btn-warning m-2"
                                 (click)="onEditDetail(item.newsId)">Edit</button>
-                            <button type="button" class="btn btn-info m-2">Detail</button>
-                            <button type="button" class="btn btn-danger m-2">Delete</button>
+                            <button type="button" class="btn btn-info m-2"
+                                (click)="onDetail(item.newsId)">Detail</button>
+                            <a nz-popconfirm nzPopconfirmTitle="Are you sure delete this record?"
+                                nzPopconfirmPlacement="bottom" (nzOnConfirm)="onDelete(item.newsId)" nzOkText="OK"
+                                nzCancelText="Cancel" class="btn btn-danger m-2">Delete
+                            </a>
                         </td>
                     </tr>
                 </ng-container>
@@ -87,27 +92,51 @@
 
 <!-- Modal -->
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Create/Update News" (nzOnCancel)="handleCancel()"
-    (nzOnOk)="onCreateUpdate()" nzCancelText="Cancel" nzOkText="Save" nzWidth="930px"
-    [nzOkDisabled]="createUpdateForm.invalid">
+    (nzOnOk)="onCreateUpdate()" [nzCancelText]="isViewMode ? 'Close' : 'Cancel'" [nzOkText]="isViewMode ? null : 'Save'"
+    nzWidth="930px" [nzOkDisabled]="createUpdateForm.invalid && !isViewMode">
     <ng-container *nzModalContent>
         <form action="" method="POST" role="form" [formGroup]="createUpdateForm">
             <input type="hidden" formControlName="NewsId">
             <div class="form-group">
                 <label for="">Name</label>
-                <input type="text" class="form-control" formControlName="NewName" id="" placeholder="News Name">
+                <input [readonly]="isViewMode" type="text" class="form-control" formControlName="NewName" id=""
+                    placeholder="News Name">
+                <small
+                    *ngIf="createUpdateForm.get('NewName')?.invalid && (createUpdateForm.get('NewName')?.dirty || createUpdateForm.get('NewName')?.touched)">
+                    <span *ngIf=" createUpdateForm.get('NewName')?.errors?.['required']">Name is required</span>
+                    <span *ngIf=" createUpdateForm.get('NewName')?.errors?.['minlength']">Name must be at least 3
+                        characters long</span>
+                    <span *ngIf=" createUpdateForm.get('NewName')?.errors?.['maxlength']">Name must be at most 70
+                        characters long</span>
+
+                </small>
             </div>
             <div class="form-group">
                 <label for="">Title</label>
-                <input type="text" class="form-control" formControlName="Title" id="" placeholder="Title Name">
+                <input [readonly]="isViewMode" type="text" class="form-control" formControlName="Title" id=""
+                    placeholder="Title Name">
+                <small
+                    *ngIf="createUpdateForm.get('Title')?.invalid && (createUpdateForm.get('Title')?.dirty || createUpdateForm.get('Title')?.touched)">
+                    <span *ngIf=" createUpdateForm.get('Title')?.errors?.['required']">Title is required</span>
+                    <span *ngIf=" createUpdateForm.get('Title')?.errors?.['minlength']">Title must be at least 3
+                        characters long</span>
+                    <span *ngIf=" createUpdateForm.get('Title')?.errors?.['maxlength']">Title must be at most 70
+                        characters long</span>
+
+                </small>
             </div>
             <div class="form-group" *ngIf="createUpdateForm.value.Image">
                 <label for="" class="mr-2">Existing Image</label>
                 <img style="width: 100px; height: 100px;" [src]="createUpdateForm.value.Image" alt="">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" *ngIf="!isViewMode">
                 <label for="" class="mr-2">Image</label>
                 <input type="file" (change)="onFileChange($event)">
+                <small
+                    *ngIf="createUpdateForm.get('Image')?.invalid && (createUpdateForm.get('Image')?.dirty || createUpdateForm.get('Image')?.touched)">
+                    <span *ngIf=" createUpdateForm.get('Image')?.errors?.['required']">Image is required</span>
+                </small>
             </div>
             <div class="form-group">
                 <label for="">Description</label>
@@ -116,7 +145,7 @@
             </div>
             <div class="form-group">
                 <label for="" class="mr-2">Display</label>
-                <nz-switch formControlName="Status"></nz-switch>
+                <nz-switch [nzDisabled]="isViewMode" formControlName="Status"></nz-switch>
             </div>
 
 
@@ -127,3 +156,9 @@
 </nz-modal>
 
 <!-- End Modal -->
+<!-- Loading overlay -->
+<div *ngIf="isLoading" class="overlay">
+    <div class="spinner-container">
+        <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+</div>
