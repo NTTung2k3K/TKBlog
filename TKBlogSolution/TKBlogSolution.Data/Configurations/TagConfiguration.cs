@@ -15,6 +15,8 @@ namespace TKBlogSolution.Data.Configurations
     {
       builder.ToTable("Tag");
       builder.HasKey(x => x.TagId);
+      builder.Property(x => x.TagId).ValueGeneratedOnAdd().UseIdentityColumn();
+
       builder.Property(x => x.TagName).HasMaxLength(250).IsRequired();
       builder.Property(x => x.Description).HasMaxLength(400).IsRequired(false);
       builder.HasMany(x => x.PostTags).WithOne(x => x.Tag).HasForeignKey(x => x.TagId).IsRequired();
