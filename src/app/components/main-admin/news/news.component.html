@@ -18,7 +18,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-sm-12 col-lg-7">
-            <button type="button" class="btn  btn-success" (click)="showModal()">Create</button>
+            <button type="button" class="btn  btn-success" (click)="showModal(true)">Create</button>
         </div>
         <div class="col-md-4 col-sm-12 col-lg-5">
             <div class="form-group">
@@ -93,7 +93,7 @@
 <!-- Modal -->
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Create/Update News" (nzOnCancel)="handleCancel()"
     (nzOnOk)="onCreateUpdate()" [nzCancelText]="isViewMode ? 'Close' : 'Cancel'" [nzOkText]="isViewMode ? null : 'Save'"
-    nzWidth="930px" [nzOkDisabled]="createUpdateForm.invalid && !isViewMode">
+    nzWidth="930px" [nzOkDisabled]="createUpdateForm.invalid && !isViewMode" (nzOnCancel)="onClose()">
     <ng-container *nzModalContent>
         <form action="" method="POST" role="form" [formGroup]="createUpdateForm">
             <input type="hidden" formControlName="NewsId">

@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKBlogSolution.API", "TKBlogSolution.API\TKBlogSolution.API.csproj", "{CB9CBA02-11FE-41FB-94D1-12D4A2688A40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TKBlogSolution.API", "TKBlogSolution.API\TKBlogSolution.API.csproj", "{CB9CBA02-11FE-41FB-94D1-12D4A2688A40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKBlogSolution.Data", "TKBlogSolution.Data\TKBlogSolution.Data.csproj", "{01DE0392-ACA3-47B7-8A96-25DAF3F5CFB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TKBlogSolution.Data", "TKBlogSolution.Data\TKBlogSolution.Data.csproj", "{01DE0392-ACA3-47B7-8A96-25DAF3F5CFB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKBlogSolution.Repo", "TKBlogSolution.Repo\TKBlogSolution.Repo.csproj", "{F76031E6-8695-49A0-86EF-5BF94A34A7FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TKBlogSolution.Repo", "TKBlogSolution.Repo\TKBlogSolution.Repo.csproj", "{F76031E6-8695-49A0-86EF-5BF94A34A7FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKBlogSolution.Service", "TKBlogSolution.Service\TKBlogSolution.Service.csproj", "{7371A8D1-D0F0-49CB-B49F-95B9E1E956A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TKBlogSolution.Service", "TKBlogSolution.Service\TKBlogSolution.Service.csproj", "{7371A8D1-D0F0-49CB-B49F-95B9E1E956A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKBlogSolution.Model", "TKBlogSolution.Model\TKBlogSolution.Model.csproj", "{4208BAC6-F658-49F4-A2D1-C46FDDC184D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7371A8D1-D0F0-49CB-B49F-95B9E1E956A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7371A8D1-D0F0-49CB-B49F-95B9E1E956A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7371A8D1-D0F0-49CB-B49F-95B9E1E956A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4208BAC6-F658-49F4-A2D1-C46FDDC184D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4208BAC6-F658-49F4-A2D1-C46FDDC184D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4208BAC6-F658-49F4-A2D1-C46FDDC184D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4208BAC6-F658-49F4-A2D1-C46FDDC184D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
