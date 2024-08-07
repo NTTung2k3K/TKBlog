@@ -17,7 +17,6 @@ import { log } from 'ng-zorro-antd/core/logger';
   styleUrl: './news.component.css'
 })
 export class NewsComponent implements OnInit {
-  // Handle Create/Update
   isVisible = false;
   isViewMode: boolean = false;
   pageIndex: number = 1;
@@ -88,7 +87,12 @@ export class NewsComponent implements OnInit {
 
 
 
-  showModal(): void {
+  showModal(isCreateMode: boolean): void {
+    if (isCreateMode) {
+      if (!this.isViewMode) {
+        this.createUpdateForm.reset();
+      }
+    }
     this.isVisible = true;
   }
   handleChange(info: NzUploadChangeParam): void {
@@ -128,7 +132,9 @@ export class NewsComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-
+    if (this.createUpdateForm.value.Status == null) {
+      this.createUpdateForm.value.Status = false;
+    }
     const formData = new FormData();
     formData.append('NewName', this.createUpdateForm.value.NewName);
     formData.append('Title', this.createUpdateForm.value.Title);
@@ -138,6 +144,7 @@ export class NewsComponent implements OnInit {
     formData.append('WriterId', this._authenService.getUser().staffId);
 
     let request$;
+
     if (this.createUpdateForm.value.NewsId == null) {
       request$ = this._dataService.postWithImage('/api/News/Create', formData);
     } else {
@@ -168,7 +175,6 @@ export class NewsComponent implements OnInit {
   }
   onEditDetail(NewsId: any) {
     this._dataService.get('/api/News/GetById?NewsId=' + NewsId).subscribe((response: any) => {
-      console.log(response);
       this.createUpdateForm.setValue({
         NewsId: response.resultObj.newsId,
         NewName: response.resultObj.newName,
@@ -178,7 +184,7 @@ export class NewsComponent implements OnInit {
         Status: response.resultObj.status,
       })
       this.isViewMode = false;
-      this.showModal();
+      this.showModal(false);
     }, error => {
       this._notificationService.showError("Error", error.message)
     })
@@ -194,7 +200,7 @@ export class NewsComponent implements OnInit {
         Status: response.resultObj.status,
       })
       this.isViewMode = true;
-      this.showModal();
+      this.showModal(false);
     }, error => {
       this._notificationService.showError("Error", error.message)
     })
@@ -214,6 +220,8 @@ export class NewsComponent implements OnInit {
       })
     this.isLoading = false;
   }
-
+  onClose() {
+    this.isViewMode = false;
+  }
 }
 

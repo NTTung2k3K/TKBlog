@@ -19,6 +19,9 @@ namespace TKBlogSolution.Data.Entities
     public DateTime RegisterAt { get; set; }
     public DateTime LastLoginAt { get; set; }
 
-    public IEnumerable<Post> Posts { get; set; } = new List<Post>();
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+
   }
 }
