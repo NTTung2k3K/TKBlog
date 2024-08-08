@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TKBlogSolution.Data.EF;
 using TKBlogSolution.Repo.Repositories;
 
 namespace TKBlogSolution.Repo.UnitOfWork
 {
   public class UnitOfWork : IUnitOfWork
   {
-    private readonly DbContext _context;
+    private readonly TKBlogSolutionContext _context;
     private readonly Dictionary<Type, object> _repositories;
 
-    public UnitOfWork(DbContext context)
+    public UnitOfWork(TKBlogSolutionContext context)
     {
-      _context = context;
+      _context = context ?? throw new ArgumentNullException(nameof(context));
       _repositories = new Dictionary<Type, object>();
     }
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TKBlogSolution.Data\TKBlogSolution.Data.csproj" />
     <ProjectReference Include="..\TKBlogSolution.Model\TKBlogSolution.Model.csproj">
       <CopyLocalSatelliteAssemblies></CopyLocalSatelliteAssemblies>
       <Private>True</Private>
@@ -14,6 +19,7 @@
     <ProjectReference Include="..\TKBlogSolution.Repo\TKBlogSolution.Repo.csproj">
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\TKBlogSolution.Utility\TKBlogSolution.Utility.csproj" />
   </ItemGroup>
 
 </Project>

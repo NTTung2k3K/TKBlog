@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace TKBlogSolution.Model.ViewPagination
 {
-  public class ViewPaginationRequest : PagedResultBase
+  public class ViewPaginationRequest : PagingRequestBase
   {
     public string? Keyword { get; set; }
+    public string? SortType { get; set; }
+
   }
 }
