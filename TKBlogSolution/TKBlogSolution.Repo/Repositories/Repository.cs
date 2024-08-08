@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,9 +36,22 @@ namespace TKBlogSolution.Repo.Repositories
     /// <param name="entity"></param>
     public void Delete(T entity)
     {
-      T existing = DbSet.Find(entity);
+      var keyProperty = GetPrimaryKeyProperty();
+
+      if (keyProperty == null)
+      {
+        throw new InvalidOperationException("The entity does not have a primary key property.");
+      }
+
+      var keyValue = keyProperty.GetValue(entity);
+
+      // Find the entity by its primary key
+      var existing = DbSet.Find(keyValue);
+
       if (existing != null)
+      {
         DbSet.Remove(existing);
+      }
     }
 
     /// <summary>
@@ -95,10 +109,40 @@ namespace TKBlogSolution.Repo.Repositories
     /// <param name="entity"></param>
     public void Update(T entity)
     {
-      DbContext.Entry(entity).State = EntityState.Modified;
-      DbSet.Attach(entity);
+      var keyProperty = GetPrimaryKeyProperty();
+
+      if (keyProperty == null)
+      {
+        throw new InvalidOperationException("The entity does not have a property named 'Id'.");
+      }
+
+      var keyValue = keyProperty.GetValue(entity);
+
+      // Check if the entity is already being tracked
+      var existingEntity = DbSet.Local.FirstOrDefault(e => keyProperty.GetValue(e).Equals(keyValue));
+
+      if (existingEntity != null)
+      {
+        // Update existing tracked entity
+        DbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+      }
+      else
+      {
+        // Attach the entity if it's not tracked
+        DbSet.Attach(entity);
+        DbContext.Entry(entity).State = EntityState.Modified;
+      }
     }
 
+    /// <summary>
+    /// Gets the primary key property of the entity type.
+    /// </summary>
+    /// <returns>The primary key property or null if not found.</returns>
+    private PropertyInfo GetPrimaryKeyProperty()
+    {
+      var keyProperties = DbContext.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties;
+      return keyProperties.Count > 0 ? typeof(T).GetProperty(keyProperties[0].Name) : null;
+    }
     /// <summary>
     /// Get all entities async
     /// </summary>
@@ -128,10 +172,14 @@ namespace TKBlogSolution.Repo.Repositories
     /// <returns></returns>
     public async Task<T> GetByIdAsync(int id, bool allowTracking = true)
     {
-      var data = await DbSet.FirstOrDefaultAsync(c =>
-      ((int)c.GetType().GetProperty("Id").GetValue(c) == id));
-
-      return data;
+      if (allowTracking)
+      {
+        return await DbSet.FindAsync(id); 
+      }
+      else
+      {
+        return await DbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+      }
     }
 
     /// <summary>
@@ -154,6 +202,6 @@ namespace TKBlogSolution.Repo.Repositories
       return data;
     }
 
-    
-}
+
+  }
 }

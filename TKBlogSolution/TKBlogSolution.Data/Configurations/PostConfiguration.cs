@@ -15,10 +15,16 @@ namespace TKBlogSolution.Data.Configurations
     {
       builder.ToTable("Post");
       builder.HasKey(x => x.PostId);
+      builder.Property(x => x.PostId).ValueGeneratedOnAdd().UseIdentityColumn();
+
       builder.Property(x => x.PostTitle).IsRequired().HasMaxLength(250);
       builder.Property(x => x.PostBody).HasMaxLength(int.MaxValue).IsRequired();
       builder.Property(x => x.PostSummary).HasMaxLength(int.MaxValue).IsRequired(false);
+      builder.Property(x => x.ThumbnailImage).HasMaxLength(int.MaxValue).IsRequired(false);
+
       builder.Property(x => x.ViewCount).IsRequired().HasDefaultValue(0);
+      builder.Property(x => x.Status).IsRequired().HasMaxLength(50);
+
       builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValue(DateTime.UtcNow);
       builder.Property(x => x.ModifiedAt).IsRequired().HasDefaultValue(DateTime.UtcNow);
 

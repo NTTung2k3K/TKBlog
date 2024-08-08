@@ -1,10 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using TKBlogSolution.Data.EF;
+using TKBlogSolution.Data.Entities;
+using TKBlogSolution.Repo.Repositories;
+using TKBlogSolution.Repo.UnitOfWork;
+using TKBlogSolution.Service.Services.Category;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddDbContext<TKBlogSolutionContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAutoMapper(typeof(TKBlogSolution.Service.Configuration.AutoMapperConfig).Assembly);
+// Register UnitOfWork and Repository
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// Register other services
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 
 builder.Services.AddControllers();

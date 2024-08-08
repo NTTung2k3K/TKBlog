@@ -13,6 +13,8 @@ namespace TKBlogSolution.Data.Entities
     public string PostBody { get; set; } = string.Empty;
     public string PostSummary { get; set; } = string.Empty;
     public int ViewCount { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public string ThumbnailImage {  get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime ModifiedAt { get; set; }
 
