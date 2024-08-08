@@ -1,14 +1,15 @@
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TKBlogSolution.Data.Entities
+namespace TKBlogSolution.Model.ViewModels.Tag
 {
-  public class AppRole : IdentityRole<Guid>
+  public class TagVm
   {
+    public int TagId { get; set; }
+    public string TagName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
   }
 }

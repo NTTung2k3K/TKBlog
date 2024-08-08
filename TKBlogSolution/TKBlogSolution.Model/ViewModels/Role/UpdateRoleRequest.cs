@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TKBlogSolution.Model.ViewModels.Category
+namespace TKBlogSolution.Model.ViewModels.Role
 {
-  public class CreateUpdateTagRequest
+  public class UpdateRoleRequest
   {
-    public string TagName { get; set; } = string.Empty;
+    public Guid RoleId { get; set; }
+    public string RoleName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-
   }
 }
